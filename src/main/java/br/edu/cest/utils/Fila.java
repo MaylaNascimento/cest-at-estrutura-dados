@@ -1,47 +1,59 @@
 package br.edu.cest.utils;
 
-public class Fila<T> {
-    private T[] a;
+import java.util.function.Consumer;
+import java.util.function.Function;
+
+public class Fila<T> implements IFila<T> {
+    private Node first; // mais recente
+    private Node last;  // mais antigo
     private int N;
 
-    // construtor
-    public Fila() {
-        a = (T[]) new Object[2];
-        N = 0;
+    private class Node {
+        private T item;
+        private Node next;
     }
-
-    // a pilha mora em a[0..N-1]
 
     public boolean estaVazia() {
-        return N == 0;
-    }
-
-    public void inserir(T item) {
-        if (N == a.length)
-            aumentar(2 * a.length);
-        a[N++] = item;
-    }
-
-    public T remover() {
-        T item = a[--N];
-        if (N > 0 && N == a.length/4)
-            aumentar(a.length/2);
-        return item;
-    }
-
-    private void aumentar(int max) {
-        T[] temp;
-        temp = (T[]) new Object[max];
-        for (int i = 0; i < N; i++)
-            temp[i] = a[i];
-        a = temp;
+        return first == null;
     }
 
     public int tamanho() {
-       return N;
+        return N;
     }
 
-    public boolean vazia() {
-        return tamanho() == 0;
+    public void inserir(T item) {
+        Node oldlast = last;
+        last = new Node();
+        last.item = item;
+        last.next = null;
+        if (estaVazia()) first = last;
+        else oldlast.next = last;
+        N++;
     }
+
+    public T remover() {
+        T item = first.item;
+        first = first.next;
+        N--;
+        if (estaVazia()) last = null;
+        return item;
+    }
+
+    public Node proximo(Node item) {
+        return item.next;
+    }
+
+    public void iterar(Consumer<T> action) {
+        Node next = first.next;
+        for (int i = 1; i <= N; i++) {
+            T item = i == 1 ? first.item : next.item ;
+            action.accept(item);
+
+            if (i == 1) continue;
+            next = next.next;
+        }
+
+    }
+
+
 }

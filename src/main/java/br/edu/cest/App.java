@@ -29,7 +29,7 @@ public class App
             if (singleLetter == '.' || singleLetter == ' ') {
                 continue;
             }
-            mainStack.push(String.valueOf(userContent.charAt(i)));
+            mainStack.push(String.valueOf(singleLetter));
         }
 
         // Imprimir em ordem inverssa
